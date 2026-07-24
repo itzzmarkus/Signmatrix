@@ -56,7 +56,7 @@ export default function App() {
     query.append("width", debouncedState.width);
     query.append("height", debouncedState.height);
 
-    return `http://localhost:8080/api/sign?${query.toString()}`;
+    return `https://signmatrix-backend.onrender.com/api/sign?${query.toString()}`;
   };
 
   return (
