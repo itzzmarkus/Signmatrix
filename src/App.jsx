@@ -2,6 +2,7 @@ import { useState } from 'react';
 import useDebounce from './hooks/useDebounce';
 import FontDropdown from './components/FontDropdown';
 import LivePreview from './components/LivePreview';
+import { Analytics } from '@vercel/analytics/react';
 
 import logo from './assets/Signmatrix.png';
 
@@ -109,6 +110,7 @@ export default function App() {
             </div>
           </div>
         </section>
+        <Analytics />
       </div>
   );
 }
