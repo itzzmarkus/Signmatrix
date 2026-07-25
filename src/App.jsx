@@ -25,6 +25,7 @@ export default function App() {
   const [width, setWidth] = useState(() => getInitialState("width", "200"));
   const [height, setHeight] = useState(() => getInitialState("height", "24"));
   const [speed, setSpeed] = useState(() => getInitialState("speed", "2500"));
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const [frames, setFrames] = useState(() => {
     const initRoute = getInitialState("route", "R5").split("|");
@@ -107,6 +108,36 @@ export default function App() {
     window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
   }, [debouncedState]);
 
+  const downloadSign = async () => {
+    try {
+      setIsDownloading(true);
+      const url = buildApiUrl();
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const objectUrl = window.URL.createObjectURL(blob);
+
+      const isGif = previewMode === "all" && frames.length > 1;
+      const extension = isGif ? "gif" : "png";
+
+      const routeName = frames[0].route ? frames[0].route.replace(/\s+/g, '-') : "custom";
+      const fileName = `signmatrix-${routeName}.${extension}`;
+
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(objectUrl);
+    } catch (error) {
+      console.error(error);
+      alert("Uh... something went wrong downloading your sign")
+    } finally {
+      setIsDownloading(false);
+    }
+  }
+
   const buildApiUrl = () => {
     const query = new URLSearchParams();
 
@@ -182,6 +213,31 @@ export default function App() {
               ))}
             </div>
         )}
+
+        <div className="flex justify-center mb-6 mt-4">
+          <button
+            onClick={downloadSign}
+            disabled={isDownloading}
+            className={`flex items-center gap-2 px-6 py-2 rounded-lg font-bold text-white transition-all ${isDownloading ? 'bg-orange-600/50 cursor-not-allowed' : 'bg-orange-600 hover:bg-orange-500 hover:scale-105 active:scale-95'}`}
+          >
+            {isDownloading ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Generating...
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download Sign
+              </>
+            )}
+          </button>
+        </div>
 
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-zinc-900 p-6 rounded-lg border border-neutral-700 md:col-span-2">
