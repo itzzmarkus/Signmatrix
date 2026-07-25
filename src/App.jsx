@@ -32,7 +32,7 @@ export default function App() {
     const [route, setRoute] = useState(() => getInitialState("route", "R5").split('|')[0]);
     const [routeFont, setRouteFont] = useState(() => getInitialState("routeFont", "22t").split('|')[0]);
     const [routeSuffix, setRouteSuffix] = useState(() => getInitialState("routeSuffix", ""));
-    const [routeSuffixFont, setRouteSuffixFont] = useState(() => getInitialState("routeSuffixFont", "8d"));
+    const [routeSuffixFont, setRouteSuffixFont] = useState(() => getInitialState("routeSuffixFont", "16d"));
     const [routeAlign, setRouteAlign] = useState(() => getInitialState("routeAlign", "LEFT"));
 
     const [frames, setFrames] = useState(() => {
@@ -40,7 +40,7 @@ export default function App() {
         const initLine1Font = getInitialState("line1Font", "12d").split("|");
         const initLine1Spacing = getInitialState("line1Spacing", "6").split("|");
         const initLine2 = getInitialState("line2", "TO KOOTENAY LOOP").split("|");
-        const initLine2Font = getInitialState("line2Font", "9d").split("|");
+        const initLine2Font = getInitialState("line2Font", "9").split("|");
         const initLine2Spacing = getInitialState("line2Spacing", "0").split("|");
         const initAnim = getInitialState("animation", "NONE").split("|");
         const initAnimSpeed = getInitialState("animSpeed", "0.25").split("|");
