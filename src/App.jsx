@@ -61,14 +61,14 @@ export default function App() {
   };
 
   return (
-      <div className="max-w-4xl mx-auto p-6 w-full space-y-6">
+      <div className="max-w-4xl mx-auto p-6 w-full space-y-4">
         <header className="flex justify-center mb-6">
           <img src={logo} alt="Signmatrix" className="h-16 object-contain" />
         </header>
 
         <LivePreview apiUrl={buildApiUrl()} />
 
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-zinc-900 p-6 rounded-lg border border-neutral-700">
             <h2 className="text-xl font-semibold mb-4 border-b border-neutral-600 pb-2">Route</h2>
             <InputGroup label="Text" value={route} onChange={setRoute} />
@@ -110,6 +110,8 @@ export default function App() {
             </div>
           </div>
         </section>
+        <p className="mb-0">made with ♥︎ by <a href="https://github.com/itzzmarkus" className="underline text-sky-400">itzzmarkus</a> | <a href="https://github.com/itzzmarkus/Signmatrix" className="underline text-sky-400">repo link</a></p>
+        <p><span className="font-bold">note</span>: the backend is hosted on Render and spins down after 15 min of inactivity. if the dest sign does not show up, come back after a minute or two and it should work!</p>
         <Analytics />
       </div>
   );
