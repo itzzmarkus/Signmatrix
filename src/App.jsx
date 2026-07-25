@@ -6,7 +6,7 @@ import logo from './assets/Signmatrix.png';
 import FrameView from "./components/FrameView.jsx";
 import InputGroup from "./components/InputGroup.jsx";
 
-const CURRENT_UPDATE_VERSION = "v1.1";
+const CURRENT_UPDATE_VERSION = "v1.11";
 
 const getInitialState = (key, defaultVal) => {
   if (typeof window !== 'undefined') {
@@ -174,9 +174,7 @@ export default function App() {
                 <h2 className="text-2xl font-bold text-white mb-2">New Signmatrix update</h2>
                 <p className="text-sm text-neutral-400 mb-4">Version {CURRENT_UPDATE_VERSION}</p>
                 <div className="text-neutral-300 space-y-3 mb-6">
-                  <p>• Web link now auto updates, so you can share your terrible dest signs by just copy and pasting the URL!</p>
-                  <p>• You can now add frames to your dest signs! As many as your heart desires! They will generate as animated GIFs.</p>
-                  <p>• You can also pause at a frame to refine the Worst Dest Sign in the World!</p>
+                  <p>• There is now a download button to share your terrible creations!</p>
                 </div>
                 <button
                     onClick={handleCloseUpdateLog}
