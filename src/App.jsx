@@ -7,6 +7,7 @@ import FrameView from "./components/FrameView.jsx";
 import InputGroup from "./components/InputGroup.jsx";
 import FontDropdown from "./components/FontDropdown.jsx";
 import {Analytics} from "@vercel/analytics/react";
+import {track} from '@vercel/analytics';
 
 const CURRENT_UPDATE_VERSION = "v1.2";
 
@@ -159,6 +160,10 @@ export default function App() {
 
             document.body.removeChild(link);
             window.URL.revokeObjectURL(objectUrl);
+            track('Downloaded Sign', {
+                route: debouncedState.route,
+                line1: debouncedState.frames[0]?.line1
+            });
         } catch (error) {
             console.error(error);
             alert("Uh... something went wrong downloading your sign")
@@ -338,7 +343,9 @@ export default function App() {
                 + Add Frame
             </button>
         </section>
-        <p className="mb-0">made with ♥︎ by <a href="https://github.com/itzzmarkus" className="underline text-sky-400">itzzmarkus</a> | <a href="https://github.com/itzzmarkus/Signmatrix" className="underline text-sky-400">repo link</a></p>
+        <p className="mb-0">made with ♥︎ by <a href="https://github.com/itzzmarkus"
+                                               className="underline text-sky-400">itzzmarkus</a> | <a
+            href="https://github.com/itzzmarkus/Signmatrix" className="underline text-sky-400">repo link</a></p>
         <Analytics/>
     </div>);
 }
