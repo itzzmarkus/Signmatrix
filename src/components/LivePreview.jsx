@@ -8,7 +8,7 @@ export default function LivePreview({ apiUrl }) {
                 style={{ imageRendering: 'pixelated' }}
                 onError={(e) => {
                     e.target.src = '';
-                    e.target.alt = 'umm... something bad happened. wait 60 seconds, as Render needs to warm up, then try again. if it still doesn\'t work, check your input.';
+                    e.target.alt = 'umm... check your input. if it still doesn\'t work, feel free to spam ping @itzzmarkus on discord.';
                 }}
             />
         </section>
