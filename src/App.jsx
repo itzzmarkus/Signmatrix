@@ -170,7 +170,7 @@ export default function App() {
         add("route", debouncedState.route, "R5");
         add("routeFont", debouncedState.routeFont, "22t");
         add("routeSuffix", debouncedState.routeSuffix, "");
-        add("routeSuffixFont", debouncedState.routeSuffixFont, "8d");
+        add("routeSuffixFont", debouncedState.routeSuffixFont, "16d");
         add("routeAlign", debouncedState.routeAlign, "LEFT");
 
         add("color", debouncedState.color, "#FF9000");
