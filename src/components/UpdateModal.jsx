@@ -9,7 +9,8 @@ function UpdateModal({ version, isOpen, onClose }) {
                 <div className="text-neutral-300 space-y-3 mb-6">
                     <p>• Presets have been added to allow you to make terrible signs quicker!</p>
                     <p>• Frontend optimizations, component separation</p>
-                    <p>• <span className="font-black">NEW</span>: suggestion box! please put your ideas here :)</p>
+                    <p>• suggestion box! please put your ideas here :)</p>
+                    <p>• <span className="font-black">NEW</span>: Added new side sign preset (14x112) and changed Titan route number to 24q</p>
                 </div>
                 <button
                     onClick={onClose}
