@@ -52,14 +52,12 @@ function FrameView({removeFrame, updateFrame, index, frame, frames}) {
                             <option value="EQUISPACED">Equispaced</option>
                         </select>
                     </div>
-                    {frames.length > 1 && (
-                        <button
-                            onClick={() => removeFrame(frame.id)}
-                            className="text-red-500 hover:text-red-400 text-sm font-bold ml-2"
-                        >
-                            ✕ Remove
-                        </button>
-                    )}
+                    <button
+                        onClick={() => removeFrame(frame.id)}
+                        className="text-red-500 hover:text-red-400 text-sm font-bold ml-2"
+                    >
+                        ✕ Remove
+                    </button>
                 </div>
             </div>
 

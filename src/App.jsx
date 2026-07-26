@@ -9,18 +9,20 @@ import FontDropdown from "./components/FontDropdown.jsx";
 import {Analytics} from "@vercel/analytics/react";
 import {track} from '@vercel/analytics';
 
-const CURRENT_UPDATE_VERSION = "v1.2";
+const CURRENT_UPDATE_VERSION = "v1.3";
 
 const getInitialState = (key, defaultVal) => {
     if (typeof window !== 'undefined') {
         const params = new URLSearchParams(window.location.search);
-        return params.get(key) || defaultVal;
+        if (params.has(key)) return params.get(key);
+        return defaultVal;
     }
     return defaultVal;
 };
 
 export default function App() {
     const [showUpdateLog, setShowUpdateLog] = useState(false);
+    const [showCheatSheet, setShowCheatSheet] = useState(false);
 
     const [previewMode, setPreviewMode] = useState("all");
 
@@ -34,13 +36,17 @@ export default function App() {
     const [routeSuffix, setRouteSuffix] = useState(() => getInitialState("routeSuffix", ""));
     const [routeSuffixFont, setRouteSuffixFont] = useState(() => getInitialState("routeSuffixFont", "8d"));
     const [routeAlign, setRouteAlign] = useState(() => getInitialState("routeAlign", "LEFT"));
+    const [ledShape, setLedShape] = useState(() => getInitialState("ledShape", "square"));
+    const [ledSize, setLedSize] = useState(() => getInitialState("ledSize", "3"));
+    const [ledGap, setLedGap] = useState(() => getInitialState("ledGap", "1"));
+    const [offColor, setOffColor] = useState(() => getInitialState("offColor", "#404040"));
 
     const [frames, setFrames] = useState(() => {
         const initLine1 = getInitialState("line1", "HASTINGS  ST").split("|");
         const initLine1Font = getInitialState("line1Font", "12d").split("|");
         const initLine1Spacing = getInitialState("line1Spacing", "6").split("|");
         const initLine2 = getInitialState("line2", "TO KOOTENAY LOOP").split("|");
-        const initLine2Font = getInitialState("line2Font", "9d").split("|");
+        const initLine2Font = getInitialState("line2Font", "9").split("|");
         const initLine2Spacing = getInitialState("line2Spacing", "0").split("|");
         const initAnim = getInitialState("animation", "NONE").split("|");
         const initAnimSpeed = getInitialState("animSpeed", "0.25").split("|");
@@ -67,8 +73,41 @@ export default function App() {
         }));
     });
 
+    const [prFrames, setPrFrames] = useState(() => {
+        const initLine1 = getInitialState("prLine1", "").split("|");
+        const initLine1Font = getInitialState("prLine1Font", "12d").split("|");
+        const initLine1Spacing = getInitialState("prLine1Spacing", "6").split("|");
+        const initLine2 = getInitialState("prLine2", "").split("|");
+        const initLine2Font = getInitialState("prLine2Font", "9").split("|");
+        const initLine2Spacing = getInitialState("prLine2Spacing", "0").split("|");
+        const initAnim = getInitialState("prAnimation", "NONE").split("|");
+        const initAnimSpeed = getInitialState("prAnimSpeed", "0.25").split("|");
+        const initL1Align = getInitialState("prLine1Align", "CENTRE").split("|");
+        const initL2Align = getInitialState("prLine2Align", "CENTRE").split("|");
+        const initVSpacing = getInitialState("prVerticalSpacing", "FLUSH").split("|");
+
+        const maxFrames = Math.max(initLine1.length, initLine2.length);
+        const getVal = (arr, i) => arr[i] !== undefined ? arr[i] : (arr[arr.length - 1] || "");
+
+        return Array.from({length: maxFrames}).map((_, i) => ({
+            id: Date.now() + i,
+            line1: getVal(initLine1, i),
+            line1Font: getVal(initLine1Font, i),
+            line1Spacing: getVal(initLine1Spacing, i),
+            line2: getVal(initLine2, i),
+            line2Font: getVal(initLine2Font, i),
+            line2Spacing: getVal(initLine2Spacing, i),
+            animation: getVal(initAnim, i),
+            animSpeed: getVal(initAnimSpeed, i),
+            line1Align: getVal(initL1Align, i),
+            line2Align: getVal(initL2Align, i),
+            verticalSpacing: getVal(initVSpacing, i),
+        }));
+    });
+
     const debouncedState = useDebounce({
-        frames, color, width, height, speed, previewMode, route, routeFont, routeSuffix, routeSuffixFont
+        frames, prFrames, color, width, height, speed, previewMode, route, routeFont, routeSuffix, routeSuffixFont, routeAlign,
+        ledShape, ledSize, ledGap, offColor
     }, 300);
 
     useEffect(() => {
@@ -83,22 +122,19 @@ export default function App() {
         setShowUpdateLog(false);
     };
 
+    const defaultFrame = {
+        line1Font: "12d", line1Spacing: "6", line2Font: "9", line2Spacing: "0",
+        animation: "NONE", animSpeed: "0.25", line1Align: "CENTRE", line2Align: "CENTRE", verticalSpacing: "FLUSH"
+    };
+
     const addFrame = () => {
-        const lastFrame = frames[frames.length - 1];
-        setFrames([...frames, {
-            id: Date.now(),
-            line1: "",
-            line1Font: lastFrame.line1Font,
-            line1Spacing: lastFrame.line1Spacing,
-            line2: "",
-            line2Font: lastFrame.line2Font,
-            line2Spacing: lastFrame.line2Spacing,
-            animation: lastFrame.animation,
-            animSpeed: lastFrame.animSpeed,
-            line1Align: lastFrame.line1Align,
-            line2Align: lastFrame.line2Align,
-            verticalSpacing: lastFrame.verticalSpacing,
-        }]);
+        const lastFrame = frames.length > 0 ? frames[frames.length - 1] : defaultFrame;
+        setFrames([...frames, { ...lastFrame, id: Date.now(), line1: "", line2: "" }]);
+    };
+
+    const addPrFrame = () => {
+        const lastFrame = prFrames.length > 0 ? prFrames[prFrames.length - 1] : (frames.length > 0 ? frames[frames.length - 1] : defaultFrame);
+        setPrFrames([...prFrames, { ...lastFrame, id: Date.now(), line1: "", line2: "" }]);
     };
 
     const removeFrame = (id) => {
@@ -110,32 +146,73 @@ export default function App() {
         setFrames(frames.map(f => f.id === id ? {...f, [field]: value} : f));
     };
 
+    const removePrFrame = (id) => {
+        setPreviewMode("all");
+        setPrFrames(prFrames.filter(f => f.id !== id));
+    };
+
+    const updatePrFrame = (id, field, value) => {
+        setPrFrames(prFrames.map(f => f.id === id ? {...f, [field]: value} : f));
+    };
+
     useEffect(() => {
         const params = new URLSearchParams();
 
-        if (debouncedState.route) params.append("route", debouncedState.route);
-        params.append("routeFont", debouncedState.routeFont);
-        params.set("line1", debouncedState.frames.map(f => f.line1).join("|"));
-        params.set("line1Font", debouncedState.frames.map(f => f.line1Font).join("|"));
-        params.set("line1Spacing", debouncedState.frames.map(f => f.line1Spacing).join("|"));
-        params.set("line2", debouncedState.frames.map(f => f.line2).join("|"));
-        params.set("line2Font", debouncedState.frames.map(f => f.line2Font).join("|"));
-        params.set("line2Spacing", debouncedState.frames.map(f => f.line2Spacing).join("|"));
-        params.set("animation", debouncedState.frames.map(f => f.animation).join("|"));
-        params.set("animSpeed", debouncedState.frames.map(f => f.animSpeed).join("|"));
-        if (debouncedState.routeAlign !== "LEFT") params.set("routeAlign", debouncedState.routeAlign); // Or query.append for buildApiUrl
-        params.set("line1Align", debouncedState.frames.map(f => f.line1Align).join("|"));
-        params.set("line2Align", debouncedState.frames.map(f => f.line2Align).join("|"));
-        params.set("verticalSpacing", debouncedState.frames.map(f => f.verticalSpacing).join("|"));
+        const add = (key, value, defaultVal) => {
+            if (value !== defaultVal) params.set(key, value);
+        };
 
-        if (debouncedState.color !== "#FF9000") params.set("color", debouncedState.color);
-        if (debouncedState.width !== "200") params.set("width", debouncedState.width);
-        if (debouncedState.height !== "24") params.set("height", debouncedState.height);
-        if (debouncedState.speed !== "2500") params.set("speed", debouncedState.speed);
-        if (debouncedState.routeSuffix) params.append("routeSuffix", debouncedState.routeSuffix);
-        params.append("routeSuffixFont", debouncedState.routeSuffixFont);
+        const compress = (arr) => {
+            if (arr.every(v => v === arr[0])) return arr[0];
+            return arr.join("|");
+        };
 
-        window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+        add("route", debouncedState.route, "R5");
+        add("routeFont", debouncedState.routeFont, "22t");
+        add("routeSuffix", debouncedState.routeSuffix, "");
+        add("routeSuffixFont", debouncedState.routeSuffixFont, "8d");
+        add("routeAlign", debouncedState.routeAlign, "LEFT");
+
+        add("color", debouncedState.color, "#FF9000");
+        add("offColor", debouncedState.offColor.replace("#", ""), "404040");
+        add("width", debouncedState.width, "200");
+        add("height", debouncedState.height, "24");
+        add("speed", debouncedState.speed, "2500");
+        add("ledShape", debouncedState.ledShape, "square");
+        add("ledSize", debouncedState.ledSize, "3");
+        add("ledGap", debouncedState.ledGap, "1");
+
+        add("line1", compress(debouncedState.frames.map(f => f.line1)), "HASTINGS  ST");
+        add("line1Font", compress(debouncedState.frames.map(f => f.line1Font)), "12d");
+        add("line1Spacing", compress(debouncedState.frames.map(f => f.line1Spacing)), "6");
+        add("line2", compress(debouncedState.frames.map(f => f.line2)), "TO KOOTENAY LOOP");
+        add("line2Font", compress(debouncedState.frames.map(f => f.line2Font)), "9");
+        add("line2Spacing", compress(debouncedState.frames.map(f => f.line2Spacing)), "0");
+        add("animation", compress(debouncedState.frames.map(f => f.animation)), "NONE");
+        add("animSpeed", compress(debouncedState.frames.map(f => f.animSpeed)), "0.25");
+        add("line1Align", compress(debouncedState.frames.map(f => f.line1Align)), "CENTRE");
+        add("line2Align", compress(debouncedState.frames.map(f => f.line2Align)), "CENTRE");
+        add("verticalSpacing", compress(debouncedState.frames.map(f => f.verticalSpacing)), "FLUSH");
+
+        const hasPrText = debouncedState.prFrames.some(f => f.line1.trim() !== "" || f.line2.trim() !== "");
+        if (hasPrText) {
+            add("prLine1", compress(debouncedState.prFrames.map(f => f.line1)), "");
+            add("prLine1Font", compress(debouncedState.prFrames.map(f => f.line1Font)), "12d");
+            add("prLine1Spacing", compress(debouncedState.prFrames.map(f => f.line1Spacing)), "6");
+            add("prLine2", compress(debouncedState.prFrames.map(f => f.line2)), "");
+            add("prLine2Font", compress(debouncedState.prFrames.map(f => f.line2Font)), "9");
+            add("prLine2Spacing", compress(debouncedState.prFrames.map(f => f.line2Spacing)), "0");
+            add("prAnimation", compress(debouncedState.prFrames.map(f => f.animation)), "NONE");
+            add("prAnimSpeed", compress(debouncedState.prFrames.map(f => f.animSpeed)), "0.25");
+            add("prLine1Align", compress(debouncedState.prFrames.map(f => f.line1Align)), "CENTRE");
+            add("prLine2Align", compress(debouncedState.prFrames.map(f => f.line2Align)), "CENTRE");
+            add("prVerticalSpacing", compress(debouncedState.prFrames.map(f => f.verticalSpacing)), "FLUSH");
+        }
+
+        const paramString = params.toString();
+        const newUrl = paramString ? `${window.location.pathname}?${paramString}` : window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
+
     }, [debouncedState]);
 
     const downloadSign = async () => {
@@ -146,7 +223,9 @@ export default function App() {
             const blob = await response.blob();
             const objectUrl = window.URL.createObjectURL(blob);
 
-            const isGif = previewMode === "all" && frames.length > 1;
+            const hasActivePr = prFrames.some(f => f.line1.trim() !== "" || f.line2.trim() !== "");
+            const isGif = previewMode === "all" && (frames.length > 1 || hasActivePr);
+
             const extension = isGif ? "gif" : "png";
 
             const routeName = frames[0].route ? frames[0].route.replace(/\s+/g, '-') : "custom";
@@ -176,36 +255,80 @@ export default function App() {
         const query = new URLSearchParams();
 
         let targetFrames = debouncedState.frames;
+        let targetPrFrames = debouncedState.prFrames;
+        let activeRoute = debouncedState.route;
+        let activeRouteSuffix = debouncedState.routeSuffix;
+
         if (debouncedState.previewMode !== "all") {
-            const frameIndex = parseInt(debouncedState.previewMode, 10);
-            if (targetFrames[frameIndex]) {
-                targetFrames = [targetFrames[frameIndex]];
+            if (debouncedState.previewMode.startsWith("pr-")) {
+                const prIndex = parseInt(debouncedState.previewMode.split("-")[1], 10);
+                if (targetPrFrames[prIndex]) {
+                    targetFrames = [targetPrFrames[prIndex]];
+                }
+                targetPrFrames = [];
+                activeRoute = "";
+                activeRouteSuffix = "";
+            } else {
+                const frameIndex = parseInt(debouncedState.previewMode, 10);
+                if (targetFrames[frameIndex]) {
+                    targetFrames = [targetFrames[frameIndex]];
+                }
+                targetPrFrames = [];
             }
         }
 
-        if (debouncedState.route) query.append("route", debouncedState.route);
+        if (activeRoute) query.append("route", activeRoute);
         query.append("routeFont", debouncedState.routeFont);
+
         query.append("line1", targetFrames.map(f => f.line1).join("|"));
         query.append("line1Font", targetFrames.map(f => f.line1Font).join("|"));
         query.append("line1Spacing", targetFrames.map(f => f.line1Spacing).join("|"));
         query.append("line2", targetFrames.map(f => f.line2).join("|"));
         query.append("line2Font", targetFrames.map(f => f.line2Font).join("|"));
         query.append("line2Spacing", targetFrames.map(f => f.line2Spacing).join("|"));
-        query.append("animation", debouncedState.frames.map(f => f.animation).join("|"));
-        query.append("animSpeed", debouncedState.frames.map(f => f.animSpeed).join("|"));
+        query.append("animation", targetFrames.map(f => f.animation).join("|"));
+        query.append("animSpeed", targetFrames.map(f => f.animSpeed).join("|"));
         if (debouncedState.routeAlign !== "LEFT") query.append("routeAlign", debouncedState.routeAlign);
-        query.append("line1Align", debouncedState.frames.map(f => f.line1Align).join("|"));
-        query.append("line2Align", debouncedState.frames.map(f => f.line2Align).join("|"));
-        query.append("verticalSpacing", debouncedState.frames.map(f => f.verticalSpacing).join("|"));
+        query.append("line1Align", targetFrames.map(f => f.line1Align).join("|"));
+        query.append("line2Align", targetFrames.map(f => f.line2Align).join("|"));
+        query.append("verticalSpacing", targetFrames.map(f => f.verticalSpacing).join("|"));
+        query.append("ledShape", debouncedState.ledShape);
+        query.append("ledSize", debouncedState.ledSize);
+        query.append("ledGap", debouncedState.ledGap);
+        query.append("offColor", debouncedState.offColor.replace("#", ""));
+
+        if (targetPrFrames.length > 0) {
+            query.append("prLine1", targetPrFrames.map(f => f.line1).join("|"));
+            query.append("prLine1Font", targetPrFrames.map(f => f.line1Font).join("|"));
+            query.append("prLine1Spacing", targetPrFrames.map(f => f.line1Spacing).join("|"));
+            query.append("prLine2", targetPrFrames.map(f => f.line2).join("|"));
+            query.append("prLine2Font", targetPrFrames.map(f => f.line2Font).join("|"));
+            query.append("prLine2Spacing", targetPrFrames.map(f => f.line2Spacing).join("|"));
+            query.append("prAnimation", targetPrFrames.map(f => f.animation).join("|"));
+            query.append("prAnimSpeed", targetPrFrames.map(f => f.animSpeed).join("|"));
+            query.append("prLine1Align", targetPrFrames.map(f => f.line1Align).join("|"));
+            query.append("prLine2Align", targetPrFrames.map(f => f.line2Align).join("|"));
+            query.append("prVerticalSpacing", targetPrFrames.map(f => f.verticalSpacing).join("|"));
+        }
 
         query.append("color", debouncedState.color.replace("#", ""));
         query.append("width", debouncedState.width);
         query.append("height", debouncedState.height);
         query.append("speed", debouncedState.speed);
-        if (debouncedState.routeSuffix) query.append("routeSuffix", debouncedState.routeSuffix);
+        if (activeRouteSuffix) query.append("routeSuffix", activeRouteSuffix);
         query.append("routeSuffixFont", debouncedState.routeSuffixFont);
 
-        return `https://signmatrix-backend.onrender.com/api/sign?${query.toString()}`;
+        return `https://signmatrix.vercel.app/api/sign?${query.toString()}`;
+    };
+    const resetHardwareSettings = () => {
+        setWidth("200");
+        setHeight("24");
+        setColor("#FF9000");
+        setOffColor("#404040");
+        setLedShape("square");
+        setLedSize("3");
+        setLedGap("1");
+        setSpeed("2500");
     };
 
     return (<div className="max-w-4xl mx-auto p-6 w-full space-y-4">
@@ -215,10 +338,9 @@ export default function App() {
                     <h2 className="text-2xl font-bold text-white mb-2">New Signmatrix update</h2>
                     <p className="text-sm text-neutral-400 mb-4">Version {CURRENT_UPDATE_VERSION}</p>
                     <div className="text-neutral-300 space-y-3 mb-6">
-                        <p>• You can now add animations to your signs!</p>
-                        <p>• Added a bunch of features that were present in the API but not on the frontend</p>
-                        <p>• Improved space efficency</p>
-                        <p>• Readded info text (something screwed up in git)</p>
+                        <p>• You can now add PR codes, which do not have a route number and autoplay after your main frames</p>
+                        <p>• Added misc. hardware options</p>
+                        <p>• Added a cheatsheet next to "Global Routes" that describes kerning and spacing options </p>
                     </div>
                     <button
                         onClick={handleCloseUpdateLog}
@@ -228,6 +350,44 @@ export default function App() {
                     </button>
                 </div>
             </div>)}
+        {showCheatSheet && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+                <div className="bg-zinc-900 border border-neutral-700 rounded-lg shadow-2xl max-w-lg w-full p-6 relative">
+                    <button
+                        onClick={() => setShowCheatSheet(false)}
+                        className="absolute top-4 right-4 text-neutral-400 hover:text-white transition-colors"
+                    >
+                        ✕
+                    </button>
+                    <h2 className="text-2xl font-bold text-white mb-2">Formatting</h2>
+                    <p className="text-sm text-neutral-400 mb-6">Use these in your text inputs to adjust the pixel layout.</p>
+
+                    <div className="space-y-4 text-sm text-neutral-300 mb-6">
+                        <div className="bg-neutral-800 p-3 rounded border border-neutral-700">
+                            <code className="text-orange-400 font-bold text-base">\1</code>
+                            <p className="mt-1">Inserts 1 pixel of blank space.</p>
+                        </div>
+
+                        <div className="bg-neutral-800 p-3 rounded border border-neutral-700">
+                            <code className="text-orange-400 font-bold text-base">\~</code>
+                            <p className="mt-1">Pulls the next character backwards by exactly 1 pixel.</p>
+                        </div>
+
+                        <div className="bg-neutral-800 p-3 rounded border border-neutral-700">
+                            <code className="text-orange-400 font-bold text-base">\\</code>
+                            <p className="mt-1">Type two backslashes to render a single backslash on the sign.</p>
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={() => setShowCheatSheet(false)}
+                        className="w-full bg-neutral-700 hover:bg-neutral-600 text-white font-semibold py-2 px-4 rounded transition-colors"
+                    >
+                        Got it
+                    </button>
+                </div>
+            </div>
+        )}
 
         <header className="flex justify-center mb-6">
             <img src={logo} alt="Signmatrix" className="h-16 object-contain"/>
@@ -238,7 +398,7 @@ export default function App() {
         <div
             className="flex flex-col md:flex-row items-center justify-between gap-4 mb-4 mt-4 bg-zinc-900/50 p-3 rounded-lg border border-neutral-700/50">
             <div className="flex flex-wrap justify-center md:justify-start gap-2">
-                {frames.length > 1 && (
+                {(frames.length > 1 || prFrames.some(f => f.line1.trim() !== "" || f.line2.trim() !== "")) && (
                     <>
                         <button
                             onClick={() => setPreviewMode("all")}
@@ -248,13 +408,25 @@ export default function App() {
                         </button>
                         {frames.map((_, idx) => (
                             <button
-                                key={idx}
+                                key={`frame-${idx}`}
                                 onClick={() => setPreviewMode(idx.toString())}
                                 className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${previewMode === idx.toString() ? "bg-orange-600 text-white" : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700"}`}
                             >
                                 Frame {idx + 1}
                             </button>
                         ))}
+                        {prFrames.map((frame, idx) => {
+                            if (!frame.line1.trim() && !frame.line2.trim()) return null;
+                            return (
+                                <button
+                                    key={`pr-${idx}`}
+                                    onClick={() => setPreviewMode(`pr-${idx}`)}
+                                    className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors ${previewMode === `pr-${idx}` ? "bg-orange-600 text-white" : "bg-neutral-800 text-neutral-400 hover:bg-neutral-700"}`}
+                                >
+                                    PR {idx + 1}
+                                </button>
+                            );
+                        })}
                     </>
                 )}
             </div>
@@ -290,7 +462,16 @@ export default function App() {
 
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-zinc-900 p-5 rounded-lg border border-neutral-700">
-                <h2 className="text-lg font-semibold mb-3 border-b border-neutral-600 pb-2">Global Route</h2>
+                <div className="flex items-center gap-2 mb-3 border-b border-neutral-600 pb-2">
+                    <h2 className="text-lg font-semibold">Global Route</h2>
+                    <button
+                        onClick={() => setShowCheatSheet(true)}
+                        title="Formatting Help"
+                        className="flex items-center justify-center w-5 h-5 rounded-full bg-neutral-700 text-neutral-300 hover:bg-orange-600 hover:text-white text-xs font-bold transition-colors"
+                    >
+                        ?
+                    </button>
+                </div>
                 <div className="grid grid-cols-5 gap-x-4">
                     <div className="col-span-3"><InputGroup label="Route Number" value={route} onChange={setRoute}/>
                     </div>
@@ -312,23 +493,55 @@ export default function App() {
                                                               onChange={setRouteSuffixFont}/></div>
                 </div>
             </div>
-
             <div className="bg-zinc-900 p-5 rounded-lg border border-neutral-700">
-                <h2 className="text-lg font-semibold mb-3 border-b border-neutral-600 pb-2">Global Settings</h2>
-                <div className="grid grid-cols-2 gap-x-4">
+                <div className="flex justify-between items-center mb-3 border-b border-neutral-600 pb-2">
+                    <h2 className="text-lg font-semibold">Hardware</h2>
+                    <button
+                        onClick={resetHardwareSettings}
+                        title="Reset to defaults"
+                        className="flex items-center gap-1 text-xs font-semibold text-neutral-400 hover:text-white transition-colors px-2 py-1 bg-neutral-800 hover:bg-neutral-700 rounded"
+                    >
+                        Reset to defaults
+                    </button>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <InputGroup label="Width (px)" type="number" value={width} onChange={setWidth}/>
                     <InputGroup label="Height (px)" type="number" value={height} onChange={setHeight}/>
-                    <div className="flex flex-col flex-1 mb-4">
-                        <label className="text-sm text-neutral-400 mb-1">LED Colour</label>
+
+                    <div className="flex flex-col">
+                        <label className="text-sm text-neutral-400 mb-1">Lit Colour</label>
                         <input
                             type="color"
                             value={color}
                             onChange={e => setColor(e.target.value)}
-                            className="w-full h-9 p-1 bg-neutral-700 border border-neutral-600 rounded cursor-pointer"
+                            className="w-full h-10 p-1 bg-neutral-700 border border-neutral-600 rounded cursor-pointer"
                         />
                     </div>
-                    <InputGroup label="Flash Speed (ms)" type="number" min="500" step="100" value={speed}
-                                onChange={setSpeed}/>
+                    <div className="flex flex-col">
+                        <label className="text-sm text-neutral-400 mb-1">Unlit Colour</label>
+                        <input
+                            type="color"
+                            value={offColor}
+                            onChange={e => setOffColor(e.target.value)}
+                            className="w-full h-10 p-1 bg-neutral-700 border border-neutral-600 rounded cursor-pointer"
+                        />
+                    </div>
+
+                    <div className="flex flex-col">
+                        <label className="text-sm text-neutral-400 mb-1">LED Shape</label>
+                        <select
+                            value={ledShape}
+                            onChange={(e) => setLedShape(e.target.value)}
+                            className="w-full p-2 h-10 rounded bg-neutral-700 border border-neutral-600 text-white focus:outline-none"
+                        >
+                            <option value="square">Square</option>
+                            <option value="round">Round (Size ≥ 4)</option>
+                        </select>
+                    </div>
+
+                    <InputGroup label="LED Size (px)" type="number" min="1" value={ledSize} onChange={setLedSize}/>
+                    <InputGroup label="LED Gap (px)" type="number" min="0" value={ledGap} onChange={setLedGap}/>
+                    <InputGroup label="Flash Speed (ms)" type="number" min="500" step="100" value={speed} onChange={setSpeed}/>
                 </div>
             </div>
             {frames.map((frame, index) => (
@@ -338,14 +551,37 @@ export default function App() {
 
             <button
                 onClick={addFrame}
-                className="md:col-span-2 w-full py-4 bg-zinc-900 border-1 border-neutral-600 rounded-lg text-neutral-400 hover:text-white hover:border-neutral-500 transition-colors"
+                className="md:col-span-2 w-full py-4 bg-zinc-900 border border-neutral-600 rounded-lg text-neutral-400 hover:text-white hover:border-neutral-500 transition-colors"
             >
                 + Add Frame
+            </button>
+
+            <div className="md:col-span-2 mt-8 mb-2">
+                <h2 className="text-2xl font-bold text-white pb-2">PR Messages</h2>
+            </div>
+
+            {prFrames.map((frame, index) => (
+                <FrameView
+                    key={frame.id}
+                    removeFrame={removePrFrame}
+                    updateFrame={updatePrFrame}
+                    index={index}
+                    frame={frame}
+                    frames={prFrames}
+                />
+            ))}
+
+            <button
+                onClick={addPrFrame}
+                className="md:col-span-2 w-full py-4 bg-zinc-900 border border-neutral-600 rounded-lg text-neutral-400 hover:text-white hover:border-neutral-500 transition-colors mb-8"
+            >
+                + Add PR Frame
             </button>
         </section>
         <p className="mb-0">made with ♥︎ by <a href="https://github.com/itzzmarkus"
                                                className="underline text-sky-400">itzzmarkus</a> | <a
             href="https://github.com/itzzmarkus/Signmatrix" className="underline text-sky-400">repo link</a></p>
+        <p>Signmatrix {CURRENT_UPDATE_VERSION}</p>
         <Analytics/>
     </div>);
 }
