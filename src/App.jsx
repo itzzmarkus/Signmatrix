@@ -34,7 +34,7 @@ export default function App() {
     const [route, setRoute] = useState(() => getInitialState("route", "R5").split('|')[0]);
     const [routeFont, setRouteFont] = useState(() => getInitialState("routeFont", "22t").split('|')[0]);
     const [routeSuffix, setRouteSuffix] = useState(() => getInitialState("routeSuffix", ""));
-    const [routeSuffixFont, setRouteSuffixFont] = useState(() => getInitialState("routeSuffixFont", "8d"));
+    const [routeSuffixFont, setRouteSuffixFont] = useState(() => getInitialState("routeSuffixFont", "16d"));
     const [routeAlign, setRouteAlign] = useState(() => getInitialState("routeAlign", "LEFT"));
     const [ledShape, setLedShape] = useState(() => getInitialState("ledShape", "square"));
     const [ledSize, setLedSize] = useState(() => getInitialState("ledSize", "3"));
