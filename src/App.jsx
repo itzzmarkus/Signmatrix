@@ -17,7 +17,7 @@ import {PRESETS} from "./data/presets.js";
 import PresetsPanel from "./components/PresetsPanel.jsx";
 import SuggestionBox from "./components/SuggestionBox.jsx";
 
-const CURRENT_UPDATE_VERSION = "v1.42";
+const CURRENT_UPDATE_VERSION = "v1.43";
 
 
 export default function App() {

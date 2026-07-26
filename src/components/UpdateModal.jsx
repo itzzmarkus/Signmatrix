@@ -10,7 +10,8 @@ function UpdateModal({ version, isOpen, onClose }) {
                     <p>• Presets have been added to allow you to make terrible signs quicker!</p>
                     <p>• Frontend optimizations, component separation</p>
                     <p>• suggestion box! please put your ideas here :)</p>
-                    <p>• <span className="font-black">NEW</span>: Added new side sign preset (14x112) and changed Titan route number to 24q</p>
+                    <p>• Added new side sign preset (14x112) and changed Titan route number to 24q</p>
+                    <p><span className="font-black">NEW</span>: • You can now use '&'. Was a backend processing mistake</p>
                 </div>
                 <button
                     onClick={onClose}
