@@ -1,0 +1,65 @@
+import { useEffect } from 'react';
+
+function useUrlSync(debouncedState) {
+    useEffect(() => {
+        const params = new URLSearchParams();
+
+        const add = (key, value, defaultVal) => {
+            if (value !== defaultVal) params.set(key, value);
+        };
+
+        const compress = (arr) => {
+            if (arr.every(v => v === arr[0])) return arr[0];
+            return arr.join("|");
+        };
+
+        add("route", debouncedState.route, "R5");
+        add("routeFont", debouncedState.routeFont, "22t");
+        add("routeSuffix", debouncedState.routeSuffix, "");
+        add("routeSuffixFont", debouncedState.routeSuffixFont, "16d");
+        add("routeAlign", debouncedState.routeAlign, "LEFT");
+
+        add("color", debouncedState.color, "#FF9000");
+        add("offColor", debouncedState.offColor.replace("#", ""), "404040");
+        add("width", debouncedState.width, "200");
+        add("height", debouncedState.height, "24");
+        add("speed", debouncedState.speed, "2500");
+        add("ledShape", debouncedState.ledShape, "square");
+        add("ledSize", debouncedState.ledSize, "3");
+        add("ledGap", debouncedState.ledGap, "1");
+
+        add("line1", compress(debouncedState.frames.map(f => f.line1)), "HASTINGS  ST");
+        add("line1Font", compress(debouncedState.frames.map(f => f.line1Font)), "12d");
+        add("line1Spacing", compress(debouncedState.frames.map(f => f.line1Spacing)), "6");
+        add("line2", compress(debouncedState.frames.map(f => f.line2)), "TO KOOTENAY LOOP");
+        add("line2Font", compress(debouncedState.frames.map(f => f.line2Font)), "9");
+        add("line2Spacing", compress(debouncedState.frames.map(f => f.line2Spacing)), "0");
+        add("animation", compress(debouncedState.frames.map(f => f.animation)), "NONE");
+        add("animSpeed", compress(debouncedState.frames.map(f => f.animSpeed)), "0.25");
+        add("line1Align", compress(debouncedState.frames.map(f => f.line1Align)), "CENTRE");
+        add("line2Align", compress(debouncedState.frames.map(f => f.line2Align)), "CENTRE");
+        add("verticalSpacing", compress(debouncedState.frames.map(f => f.verticalSpacing)), "FLUSH");
+
+        const hasPrText = debouncedState.prFrames.some(f => f.line1.trim() !== "" || f.line2.trim() !== "");
+        if (hasPrText) {
+            add("prLine1", compress(debouncedState.prFrames.map(f => f.line1)), "");
+            add("prLine1Font", compress(debouncedState.prFrames.map(f => f.line1Font)), "12d");
+            add("prLine1Spacing", compress(debouncedState.prFrames.map(f => f.line1Spacing)), "6");
+            add("prLine2", compress(debouncedState.prFrames.map(f => f.line2)), "");
+            add("prLine2Font", compress(debouncedState.prFrames.map(f => f.line2Font)), "9");
+            add("prLine2Spacing", compress(debouncedState.prFrames.map(f => f.line2Spacing)), "0");
+            add("prAnimation", compress(debouncedState.prFrames.map(f => f.animation)), "NONE");
+            add("prAnimSpeed", compress(debouncedState.prFrames.map(f => f.animSpeed)), "0.25");
+            add("prLine1Align", compress(debouncedState.prFrames.map(f => f.line1Align)), "CENTRE");
+            add("prLine2Align", compress(debouncedState.prFrames.map(f => f.line2Align)), "CENTRE");
+            add("prVerticalSpacing", compress(debouncedState.prFrames.map(f => f.verticalSpacing)), "FLUSH");
+        }
+
+        const paramString = params.toString();
+        const newUrl = paramString ? `${window.location.pathname}?${paramString}` : window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
+
+    }, [debouncedState]);
+}
+
+export default useUrlSync;

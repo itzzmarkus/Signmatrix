@@ -1,4 +1,4 @@
-export default function LivePreview({ apiUrl }) {
+function LivePreview({ apiUrl }) {
     return (
         <section className="bg-black p-8 rounded-lg border border-neutral-700 flex justify-center items-center min-h-[120px] mb-6">
             <img
@@ -14,3 +14,5 @@ export default function LivePreview({ apiUrl }) {
         </section>
     );
 }
+
+export default LivePreview;

@@ -4,7 +4,7 @@ const FONTS = [
     "22t", "24q", "f16", "5x7", "8x14"
 ];
 
-export default function FontDropdown({ label, value, onChange }) {
+function FontDropdown({ label, value, onChange }) {
     return (
         <div className="flex flex-col flex-1 mb-4">
             <label className="text-sm text-neutral-400 mb-1">{label}</label>
@@ -20,3 +20,5 @@ export default function FontDropdown({ label, value, onChange }) {
         </div>
     );
 }
+
+export default FontDropdown;
