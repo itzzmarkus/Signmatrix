@@ -14,7 +14,7 @@ function useUrlSync(debouncedState) {
         };
 
         add("route", debouncedState.route, "R5");
-        add("routeFont", debouncedState.routeFont, "22t");
+        add("routeFont", debouncedState.routeFont, "24q");
         add("routeSuffix", debouncedState.routeSuffix, "");
         add("routeSuffixFont", debouncedState.routeSuffixFont, "16d");
         add("routeAlign", debouncedState.routeAlign, "LEFT");
