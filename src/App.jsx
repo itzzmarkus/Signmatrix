@@ -67,7 +67,7 @@ export default function App() {
     const [speed, setSpeed] = useState(() => getInitialState("speed", "2500"));
     const [isDownloading, setIsDownloading] = useState(false);
     const [route, setRoute] = useState(() => getInitialState("route", "R5").split('|')[0]);
-    const [routeFont, setRouteFont] = useState(() => getInitialState("routeFont", "22t").split('|')[0]);
+    const [routeFont, setRouteFont] = useState(() => getInitialState("routeFont", "24q").split('|')[0]);
     const [routeSuffix, setRouteSuffix] = useState(() => getInitialState("routeSuffix", ""));
     const [routeSuffixFont, setRouteSuffixFont] = useState(() => getInitialState("routeSuffixFont", "16d"));
     const [routeAlign, setRouteAlign] = useState(() => getInitialState("routeAlign", "LEFT"));
