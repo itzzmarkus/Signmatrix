@@ -15,8 +15,9 @@ import {buildApiUrl, downloadSign, getInitialState} from './utils/signUtils';
 import useUrlSync from "./hooks/useUrlSync.js";
 import {PRESETS} from "./data/presets.js";
 import PresetsPanel from "./components/PresetsPanel.jsx";
+import SuggestionBox from "./components/SuggestionBox.jsx";
 
-const CURRENT_UPDATE_VERSION = "v1.4";
+const CURRENT_UPDATE_VERSION = "v1.41";
 
 
 export default function App() {
@@ -184,6 +185,7 @@ export default function App() {
                 + Add PR Frame
             </button>
         </section>
+        <SuggestionBox />
         <Footer version={CURRENT_UPDATE_VERSION}/>
     </div>);
 }

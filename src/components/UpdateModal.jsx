@@ -9,6 +9,7 @@ function UpdateModal({ version, isOpen, onClose }) {
                 <div className="text-neutral-300 space-y-3 mb-6">
                     <p>• Presets have been added to allow you to make terrible signs quicker!</p>
                     <p>• Frontend optimizations, component separation</p>
+                    <p>• <span className="font-black">NEW</span>: suggestion box! please put your ideas here :)</p>
                 </div>
                 <button
                     onClick={onClose}
