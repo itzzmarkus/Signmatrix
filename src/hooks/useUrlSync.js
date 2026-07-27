@@ -36,6 +36,7 @@ function useUrlSync(debouncedState) {
         add("line2Spacing", compress(debouncedState.frames.map(f => f.line2Spacing)), "0");
         add("animation", compress(debouncedState.frames.map(f => f.animation)), "NONE");
         add("animSpeed", compress(debouncedState.frames.map(f => f.animSpeed)), "0.25");
+        add("delay", compress(debouncedState.frames.map(f => f.delay || "")), "");
         add("line1Align", compress(debouncedState.frames.map(f => f.line1Align)), "CENTRE");
         add("line2Align", compress(debouncedState.frames.map(f => f.line2Align)), "CENTRE");
         add("verticalSpacing", compress(debouncedState.frames.map(f => f.verticalSpacing)), "FLUSH");
@@ -50,6 +51,7 @@ function useUrlSync(debouncedState) {
             add("prLine2Spacing", compress(debouncedState.prFrames.map(f => f.line2Spacing)), "0");
             add("prAnimation", compress(debouncedState.prFrames.map(f => f.animation)), "NONE");
             add("prAnimSpeed", compress(debouncedState.prFrames.map(f => f.animSpeed)), "0.25");
+            add("prDelay", compress(debouncedState.prFrames.map(f => f.delay || "")), "");
             add("prLine1Align", compress(debouncedState.prFrames.map(f => f.line1Align)), "CENTRE");
             add("prLine2Align", compress(debouncedState.prFrames.map(f => f.line2Align)), "CENTRE");
             add("prVerticalSpacing", compress(debouncedState.prFrames.map(f => f.verticalSpacing)), "FLUSH");

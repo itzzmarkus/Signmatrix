@@ -46,6 +46,7 @@ export const buildApiUrl = (debouncedState) => {
     query.append("line2Spacing", targetFrames.map(f => f.line2Spacing).join("|"));
     query.append("animation", targetFrames.map(f => f.animation).join("|"));
     query.append("animSpeed", targetFrames.map(f => f.animSpeed).join("|"));
+    query.append("delay", targetFrames.map(f => f.delay || "").join("|"));
     if (debouncedState.routeAlign !== "LEFT") query.append("routeAlign", debouncedState.routeAlign);
     query.append("line1Align", targetFrames.map(f => f.line1Align).join("|"));
     query.append("line2Align", targetFrames.map(f => f.line2Align).join("|"));
@@ -64,6 +65,7 @@ export const buildApiUrl = (debouncedState) => {
         query.append("prLine2Spacing", targetPrFrames.map(f => f.line2Spacing).join("|"));
         query.append("prAnimation", targetPrFrames.map(f => f.animation).join("|"));
         query.append("prAnimSpeed", targetPrFrames.map(f => f.animSpeed).join("|"));
+        query.append("prDelay", targetPrFrames.map(f => f.delay || "").join("|"));
         query.append("prLine1Align", targetPrFrames.map(f => f.line1Align).join("|"));
         query.append("prLine2Align", targetPrFrames.map(f => f.line2Align).join("|"));
         query.append("prVerticalSpacing", targetPrFrames.map(f => f.verticalSpacing).join("|"));

@@ -32,6 +32,22 @@ export const PRESETS = [
         prFrames: []
     },
     {
+        id: "axion-stacked",
+        name: "Axion Stacked",
+        color: "#FF9000", width: "160", height: "16", speed: "2500", offColor: "#404040", ledShape: "square", ledSize: "3", ledGap: "1",
+        route: "130", routeFont: "balios16", routeAlign: "LEFT", routeSuffix: "", routeSuffixFont: "16d",
+        frames: [{ id: Date.now() + 4, line1: "WILLINGDON", line1Font: "balios8d", line1Spacing: "5", line2: "TO METROTOWN STN", line2Font: "balios7", line2Spacing: "0", animation: "NONE", animSpeed: "0.25", line1Align: "CENTRE", line2Align: "CENTRE", verticalSpacing: "FLUSH" }],
+        prFrames: []
+    },
+    {
+        id: "axion-unstacked",
+        name: "Axion Unstacked",
+        color: "#FF9000", width: "160", height: "16", speed: "2500", offColor: "#404040", ledShape: "square", ledSize: "3", ledGap: "1",
+        route: "130", routeFont: "balios16", routeAlign: "LEFT", routeSuffix: "", routeSuffixFont: "16d",
+        frames: [{ id: Date.now() + 4, line1: "METROTOWN STN", line1Font: "balios12", line1Spacing: "0", line2: "", line2Font: "7", line2Spacing: "0", animation: "NONE", animSpeed: "0.25", line1Align: "CENTRE", line2Align: "CENTRE", verticalSpacing: "FLUSH" }],
+        prFrames: []
+    },
+    {
         id: "side1",
         name: "Side Sign (96x8)",
         color: "#FF9000", width: "96", height: "8", speed: "2500", offColor: "#404040", ledShape: "round", ledSize: "6", ledGap: "1",
