@@ -37,13 +37,18 @@ export const buildApiUrl = (debouncedState) => {
 
     if (activeRoute) query.append("route", activeRoute);
     query.append("routeFont", debouncedState.routeFont);
+    query.append("routeColor", (debouncedState.routeColor || "").replace("#", ""));
 
     query.append("line1", targetFrames.map(f => f.line1).join("|"));
     query.append("line1Font", targetFrames.map(f => f.line1Font).join("|"));
+    query.append("line1Color", targetFrames.map(f => f.line1Color || "").join("|"));
     query.append("line1Spacing", targetFrames.map(f => f.line1Spacing).join("|"));
+
     query.append("line2", targetFrames.map(f => f.line2).join("|"));
     query.append("line2Font", targetFrames.map(f => f.line2Font).join("|"));
+    query.append("line2Color", targetFrames.map(f => f.line2Color || "").join("|"));
     query.append("line2Spacing", targetFrames.map(f => f.line2Spacing).join("|"));
+
     query.append("animation", targetFrames.map(f => f.animation).join("|"));
     query.append("animSpeed", targetFrames.map(f => f.animSpeed).join("|"));
     query.append("delay", targetFrames.map(f => f.delay || "").join("|"));
@@ -56,13 +61,19 @@ export const buildApiUrl = (debouncedState) => {
     query.append("ledGap", debouncedState.ledGap);
     query.append("offColor", debouncedState.offColor.replace("#", ""));
 
+
+
     if (targetPrFrames.length > 0) {
         query.append("prLine1", targetPrFrames.map(f => f.line1).join("|"));
         query.append("prLine1Font", targetPrFrames.map(f => f.line1Font).join("|"));
+        query.append("prLine1Color", targetPrFrames.map(f => f.line1Color || "").join("|"))
         query.append("prLine1Spacing", targetPrFrames.map(f => f.line1Spacing).join("|"));
+
         query.append("prLine2", targetPrFrames.map(f => f.line2).join("|"));
         query.append("prLine2Font", targetPrFrames.map(f => f.line2Font).join("|"));
+        query.append("prLine2Color", targetPrFrames.map(f => f.line2Color || "").join("|"));
         query.append("prLine2Spacing", targetPrFrames.map(f => f.line2Spacing).join("|"));
+
         query.append("prAnimation", targetPrFrames.map(f => f.animation).join("|"));
         query.append("prAnimSpeed", targetPrFrames.map(f => f.animSpeed).join("|"));
         query.append("prDelay", targetPrFrames.map(f => f.delay || "").join("|"));
@@ -77,6 +88,7 @@ export const buildApiUrl = (debouncedState) => {
     query.append("speed", debouncedState.speed);
     if (activeRouteSuffix) query.append("routeSuffix", activeRouteSuffix);
     query.append("routeSuffixFont", debouncedState.routeSuffixFont);
+    query.append("routeSuffixColor", (debouncedState.routeSuffixColor || "").replace("#", ""));
 
     return `https://signmatrix-backend.onrender.com/api/sign?${query.toString()}`;
 };

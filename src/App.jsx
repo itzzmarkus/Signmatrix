@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useCallback} from 'react';
 import useDebounce from './hooks/useDebounce';
 import LivePreview from './components/LivePreview';
 
@@ -13,11 +13,12 @@ import GlobalRoutePanel from "./components/GlobalRoutePanel.jsx";
 import useFrames from "./hooks/useFrames.js";
 import {buildApiUrl, downloadSign, getInitialState} from './utils/signUtils';
 import useUrlSync from "./hooks/useUrlSync.js";
+import useUndo from "./hooks/useUndo.js";
 import {PRESETS} from "./data/presets.js";
 import PresetsPanel from "./components/PresetsPanel.jsx";
 import SuggestionBox from "./components/SuggestionBox.jsx";
 
-const CURRENT_UPDATE_VERSION = "v1.51";
+const CURRENT_UPDATE_VERSION = "v1.6";
 
 
 export default function App() {
@@ -68,6 +69,8 @@ export default function App() {
     const [isDownloading, setIsDownloading] = useState(false);
     const [route, setRoute] = useState(() => getInitialState("route", "R5").split('|')[0]);
     const [routeFont, setRouteFont] = useState(() => getInitialState("routeFont", "24q").split('|')[0]);
+    const [routeColor, setRouteColor] = useState(getInitialState("routeColor", ""));
+    const [routeSuffixColor, setRouteSuffixColor] = useState(getInitialState("routeSuffixColor", ""));
     const [routeSuffix, setRouteSuffix] = useState(() => getInitialState("routeSuffix", ""));
     const [routeSuffixFont, setRouteSuffixFont] = useState(() => getInitialState("routeSuffixFont", "16d"));
     const [routeAlign, setRouteAlign] = useState(() => getInitialState("routeAlign", "LEFT"));
@@ -86,14 +89,39 @@ export default function App() {
         previewMode,
         route,
         routeFont,
+        routeColor,
         routeSuffix,
         routeSuffixFont,
+        routeSuffixColor,
         routeAlign,
         ledShape,
         ledSize,
         ledGap,
         offColor
     }, 300);
+
+    const restoreState = useCallback((saved) => {
+        setFrames(saved.frames);
+        setPrFrames(saved.prFrames);
+        setColor(saved.color);
+        setWidth(saved.width);
+        setHeight(saved.height);
+        setSpeed(saved.speed);
+        setPreviewMode(saved.previewMode);
+        setRoute(saved.route);
+        setRouteFont(saved.routeFont);
+        setRouteColor(saved.routeColor);
+        setRouteSuffix(saved.routeSuffix);
+        setRouteSuffixFont(saved.routeSuffixFont);
+        setRouteSuffixColor(saved.routeSuffixColor);
+        setRouteAlign(saved.routeAlign);
+        setLedShape(saved.ledShape);
+        setLedSize(saved.ledSize);
+        setLedGap(saved.ledGap);
+        setOffColor(saved.offColor);
+    }, [setFrames, setPrFrames]);
+
+    const { undo, redo, canUndo, canRedo } = useUndo(debouncedState, restoreState);
 
     useUrlSync(debouncedState);
 
@@ -128,8 +156,27 @@ export default function App() {
         <UpdateModal version={CURRENT_UPDATE_VERSION} onClose={handleCloseUpdateLog} isOpen={showUpdateLog}/>
         <CheatSheetModal isOpen={showCheatSheet} onClose={() => setShowCheatSheet(false)}/>
 
-        <header className="flex justify-center mb-6">
+        <header className="flex justify-between items-center mb-6 relative">
+            <div className="w-24"></div>
             <img src={logo} alt="Signmatrix" className="h-16 object-contain"/>
+            <div className="flex gap-1 w-24 justify-end">
+                <button
+                    onClick={undo}
+                    disabled={!canUndo}
+                    title="Undo (Ctrl+Z)"
+                    className="flex items-center justify-center w-8 h-8 rounded bg-neutral-800 border border-neutral-700 text-neutral-400 hover:text-white hover:border-neutral-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fillRule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/></svg>
+                </button>
+                <button
+                    onClick={redo}
+                    disabled={!canRedo}
+                    title="Redo (Ctrl+Y)"
+                    className="flex items-center justify-center w-8 h-8 rounded bg-neutral-800 border border-neutral-700 text-neutral-400 hover:text-white hover:border-neutral-500 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fillRule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></svg>
+                </button>
+            </div>
         </header>
 
         <LivePreview apiUrl={buildApiUrl(debouncedState)}/>
@@ -145,7 +192,7 @@ export default function App() {
             <GlobalRoutePanel route={route} setRoute={setRoute} routeAlign={routeAlign} setRouteAlign={setRouteAlign}
                               routeFont={routeFont} setRouteFont={setRouteFont} routeSuffix={routeSuffix}
                               setRouteSuffix={setRouteSuffix} routeSuffixFont={routeSuffixFont}
-                              setRouteSuffixFont={setRouteSuffixFont} setShowCheatSheet={setShowCheatSheet}/>
+                              setRouteSuffixFont={setRouteSuffixFont} setShowCheatSheet={setShowCheatSheet} routeColor={routeColor} routeSuffixColor={routeSuffixColor} setRouteColor={setRouteColor} setRouteSuffixColor={setRouteSuffixColor}/>
 
             <HardwarePanel speed={speed} color={color} height={height} width={width} ledGap={ledGap} ledShape={ledShape}
                            ledSize={ledSize} setColor={setColor} offColor={offColor} setHeight={setHeight}

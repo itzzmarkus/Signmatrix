@@ -32,13 +32,13 @@ function SuggestionBox() {
 
     return (
         <div className="bg-zinc-900 p-5 rounded-lg border border-neutral-700 w-full mt-8">
-            <h2 className="text-lg font-semibold text-white mb-4">Got a suggestion?</h2>
+            <h2 className="text-lg font-semibold text-white mb-4">Got a suggestion? Found a bug?</h2>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-3">
                 <textarea
                     value={suggestion}
                     onChange={(e) => setSuggestion(e.target.value)}
-                    placeholder="type your idea here..."
+                    placeholder="type your idea/bug here..."
                     disabled={status === 'loading' || status === 'success'}
                     className="w-full p-3 h-24 rounded bg-neutral-800 border border-neutral-600 text-white placeholder-neutral-500 focus:outline-none focus:border-orange-500 resize-none disabled:opacity-50"
                 />

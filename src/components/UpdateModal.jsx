@@ -7,10 +7,10 @@ function UpdateModal({ version, isOpen, onClose }) {
                 <h2 className="text-2xl font-bold text-white mb-2">New Signmatrix update</h2>
                 <p className="text-sm text-neutral-400 mb-4">Version {version}</p>
                 <div className="text-neutral-300 space-y-3 mb-6">
-                    <p>• You can now individually adjust font sizes within a text input! Just toggle Mixed Fonts!</p>
-                    <p>• Added Balios/Axion fonts, with Axion Unstacked and Stacked presets.</p>
-                    <p>• UI is getting a bit cluttered so I may change it in a later update.</p>
-                    <p>• new: changed Titan Unstacked destination preset to 16d.</p>
+                    <p>• Support for multi-coloured text! so cool</p>
+                    <p>• You can now undo and redo with CTRL+Z and SHIFT+CTRL+Z</p>
+                    <p>• Made some UI consistency changes</p>
+                    <p>• Please report any bugs in the suggestion box!</p>
                 </div>
                 <button
                     onClick={onClose}

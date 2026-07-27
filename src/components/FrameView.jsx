@@ -5,32 +5,37 @@ function LineEditor({
     title,
     textStr,
     fontStr,
+    colorStr,
     spacingStr,
     alignStr,
     onUpdateText,
     onUpdateFont,
+    onUpdateColor,
     onUpdateSpacing,
     onUpdateAlign,
     placeholder
 }) {
     const texts = (textStr || "").split("^");
     const fonts = (fontStr || "").split("^");
-    const isSplit = texts.length > 1 || fonts.length > 1;
+    const colors = (colorStr || "").split("^");
+    const isSplit = texts.length > 1 || fonts.length > 1 || colors.length > 1;
 
     const toggleSplit = () => {
         if (isSplit) {
             onUpdateText(texts.join(""));
             onUpdateFont(fonts[0] || "16d");
+            onUpdateColor(colors[0] || "");
         } else {
             onUpdateText((textStr || "") + "^");
             onUpdateFont((fontStr || "16d") + "^" + (fontStr || "16d"));
+            onUpdateColor((colorStr || "") + "^" + (colors[colors.length - 1] || ""));
         }
     };
 
     return (
         <div className="mb-6">
             <div className="flex justify-between items-center mb-2">
-                <label className="text-sm text-neutral-400 font-semibold">{title}</label>
+                <label className="text-sm text-neutral-400">{title}</label>
                 <button onClick={toggleSplit} className="text-xs text-orange-400 hover:text-orange-300 font-semibold transition-colors">
                     {isSplit ? "Standard" : "Mixed Fonts"}
                 </button>
@@ -60,9 +65,23 @@ function LineEditor({
                             </select>
                         )}
                     </div>
-                    <div className="grid grid-cols-3 gap-x-4 ">
+                    <div className="grid grid-cols-4 gap-x-4 items-end">
                         <div className="col-span-2">
                             <FontDropdown label="Font" value={fonts[0]} onChange={onUpdateFont} />
+                        </div>
+                        <div className="col-span-1 flex flex-col">
+                            <label className="text-neutral-500 mb-1 text-sm">Colour</label>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="color"
+                                    value={colors[0] ? `#${colors[0]}` : "#ff9000"}
+                                    onChange={(e) => onUpdateColor(e.target.value.replace("#", ""))}
+                                    className="w-10 h-10 p-1 rounded bg-neutral-800 border border-neutral-600 cursor-pointer"
+                                />
+                                {colors[0] && (
+                                    <button onClick={() => onUpdateColor("")} className="text-xs text-neutral-500 hover:text-white" title="Reset to global">✕</button>
+                                )}
+                            </div>
                         </div>
                         <div className="col-span-1">
                             <InputGroup label="Spacing" type="number" min="0" value={spacingStr} onChange={onUpdateSpacing} />
@@ -96,14 +115,30 @@ function LineEditor({
                                     }}
                                 />
                             </div>
+                            <div className="w-10 h-full">
+                                <input
+                                    type="color"
+                                    value={colors[idx] ? `#${colors[idx]}` : (colors[0] ? `#${colors[0]}` : "#ff9000")}
+                                    onChange={(e) => {
+                                        const newColors = [...colors];
+                                        newColors[idx] = e.target.value.replace("#", "");
+                                        onUpdateColor(newColors.join("^"));
+                                    }}
+                                    title="Segment Colour"
+                                    className="w-full h-full p-1 rounded bg-neutral-800 border border-neutral-600 cursor-pointer"
+                                />
+                            </div>
                             <button
                                 onClick={() => {
                                     const newTexts = [...texts];
                                     const newFonts = [...fonts];
+                                    const newColors = [...colors];
                                     newTexts.splice(idx, 1);
                                     newFonts.splice(idx, 1);
+                                    newColors.splice(idx, 1);
                                     onUpdateText(newTexts.join("^"));
                                     onUpdateFont(newFonts.join("^"));
+                                    onUpdateColor(newColors.join("^"));
                                 }}
                                 className="w-8 h-full flex items-center justify-center text-neutral-500 hover:text-red-400 hover:bg-neutral-800 rounded font-bold transition-all"
                             >
@@ -117,9 +152,11 @@ function LineEditor({
                             onClick={() => {
                                 const newTexts = [...texts, ""];
                                 const newFonts = [...fonts, fonts[fonts.length - 1] || "16d"];
+                                const newColors = [...colors, colors[colors.length - 1] || ""];
 
                                 onUpdateText(newTexts.join("^"));
                                 onUpdateFont(newFonts.join("^"));
+                                onUpdateColor(newColors.join("^"));
                             }}
                             className="text-sm text-neutral-400 hover:text-white font-semibold transition-colors px-2 py-1 rounded bg-neutral-900 hover:bg-neutral-800"
                         >
@@ -128,12 +165,12 @@ function LineEditor({
 
                         <div className="flex gap-3">
                             <div className="flex flex-col">
-                                <label className="text-sm text-neutral-500 mb-1 font-semibold">Spacing</label>
+                                <label className="text-sm text-neutral-500 mb-1">Spacing</label>
                                 <input type="number" min="0" value={spacingStr} onChange={(e) => onUpdateSpacing(e.target.value)} className="w-16 h-8 px-2 rounded bg-neutral-800 border border-neutral-600 text-white text-sm focus:outline-none focus:ring-1 focus:ring-orange-500" />
                             </div>
                             {onUpdateAlign && (
                                 <div className="flex flex-col">
-                                    <label className="text-sm text-neutral-500 mb-1 font-semibold">Align</label>
+                                    <label className="text-sm text-neutral-500 mb-1">Align</label>
                                     <select value={alignStr || "CENTRE"} onChange={(e) => onUpdateAlign(e.target.value)} className="w-20 h-8 px-1 rounded bg-neutral-800 border border-neutral-600 text-white text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 cursor-pointer">
                                         <option value="LEFT">Left</option>
                                         <option value="CENTRE">Centre</option>
@@ -149,7 +186,6 @@ function LineEditor({
     );
 }
 
-
 function FrameView({removeFrame, updateFrame, index, frame}) {
     return (
         <div key={frame.id} className="bg-zinc-900 p-5 rounded-lg border border-neutral-700 relative md:col-span-2">
@@ -161,7 +197,7 @@ function FrameView({removeFrame, updateFrame, index, frame}) {
 
                 <div className="flex items-center gap-4 flex-wrap">
                     <div className="flex items-center gap-2">
-                        <label className="text-sm text-neutral-400 font-semibold">Transition:</label>
+                        <label className="text-sm text-neutral-400">Transition:</label>
                         <select
                             value={frame.animation}
                             onChange={(e) => updateFrame(frame.id, "animation", e.target.value)}
@@ -177,7 +213,7 @@ function FrameView({removeFrame, updateFrame, index, frame}) {
 
                     {frame.animation !== "NONE" && (
                         <div className="flex items-center gap-2">
-                            <label className="text-sm text-neutral-400 font-semibold">Speed (s):</label>
+                            <label className="text-sm text-neutral-400">Speed (s):</label>
                             <input
                                 type="number"
                                 min="0.01"
@@ -190,7 +226,7 @@ function FrameView({removeFrame, updateFrame, index, frame}) {
                     )}
 
                     <div className="flex items-center gap-2 ml-2">
-                        <label className="text-sm text-neutral-400 font-semibold" title="Leave blank to use the global hardware speed">Hold (ms):</label>
+                        <label className="text-sm text-neutral-400" title="Leave blank to use the global hardware speed">Hold (ms):</label>
                         <input
                             type="number"
                             placeholder="Global"
@@ -202,8 +238,8 @@ function FrameView({removeFrame, updateFrame, index, frame}) {
                         />
                     </div>
 
-                    <div className="flex items-center gap-2 pl-4 ml-2 border-l border-neutral-700">
-                        <label className="text-sm text-neutral-400 font-semibold">Stack:</label>
+                    <div className="flex items-center gap-2 pl-4 ml-2">
+                        <label className="text-sm text-neutral-400">Stack:</label>
                         <select
                             value={frame.verticalSpacing}
                             onChange={(e) => updateFrame(frame.id, "verticalSpacing", e.target.value)}
@@ -230,10 +266,12 @@ function FrameView({removeFrame, updateFrame, index, frame}) {
                     placeholder="e.g. 41ST AVE"
                     textStr={frame.line1}
                     fontStr={frame.line1Font}
+                    colorStr={frame.line1Color}
                     spacingStr={frame.line1Spacing}
                     alignStr={frame.line1Align}
                     onUpdateText={(val) => updateFrame(frame.id, "line1", val)}
                     onUpdateFont={(val) => updateFrame(frame.id, "line1Font", val)}
+                    onUpdateColor={(val) => updateFrame(frame.id, "line1Color", val)}
                     onUpdateSpacing={(val) => updateFrame(frame.id, "line1Spacing", val)}
                     onUpdateAlign={(val) => updateFrame(frame.id, "line1Align", val)}
                 />
@@ -243,10 +281,12 @@ function FrameView({removeFrame, updateFrame, index, frame}) {
                     placeholder="Leave blank for unstacked"
                     textStr={frame.line2}
                     fontStr={frame.line2Font}
+                    colorStr={frame.line2Color}
                     spacingStr={frame.line2Spacing}
                     alignStr={frame.line2Align}
                     onUpdateText={(val) => updateFrame(frame.id, "line2", val)}
                     onUpdateFont={(val) => updateFrame(frame.id, "line2Font", val)}
+                    onUpdateColor={(val) => updateFrame(frame.id, "line2Color", val)}
                     onUpdateSpacing={(val) => updateFrame(frame.id, "line2Spacing", val)}
                     onUpdateAlign={(val) => updateFrame(frame.id, "line2Align", val)}
                 />

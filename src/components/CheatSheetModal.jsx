@@ -28,6 +28,7 @@ function CheatSheetModal({ isOpen, onClose }) {
                         <code className="text-orange-400 font-bold text-base">\\</code>
                         <p className="mt-1">Type two backslashes to render a single backslash on the sign.</p>
                     </div>
+                    <p>ps: use CTRL+Z and SHIFT+CTRL+Z to undo and redo actions!</p>
                 </div>
 
                 <button

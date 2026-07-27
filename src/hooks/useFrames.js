@@ -3,8 +3,10 @@ import {getInitialState} from '../utils/signUtils';
 
 const defaultFrame = {
     line1Font: "12d",
+    line1Color: "",
     line1Spacing: "6",
     line2Font: "9",
+    line2Color: "",
     line2Spacing: "0",
     animation: "NONE",
     animSpeed: "0.25",
@@ -23,6 +25,10 @@ function useFrames(setPreviewMode) {
         const initLine2 = getInitialState("line2", "TO KOOTENAY LOOP").split("|");
         const initLine2Font = getInitialState("line2Font", "9").split("|");
         const initLine2Spacing = getInitialState("line2Spacing", "0").split("|");
+
+        const initLine1Color = getInitialState("line1Color", "").split("|");
+        const initLine2Color = getInitialState("line2Color", "").split("|")
+
         const initAnim = getInitialState("animation", "NONE").split("|");
         const initAnimSpeed = getInitialState("animSpeed", "0.25").split("|");
         const initL1Align = getInitialState("line1Align", "CENTRE").split("|");
@@ -37,9 +43,11 @@ function useFrames(setPreviewMode) {
             id: Date.now() + i,
             line1: getVal(initLine1, i),
             line1Font: getVal(initLine1Font, i),
+            line1Color: getVal(initLine1Color, i),
             line1Spacing: getVal(initLine1Spacing, i),
             line2: getVal(initLine2, i),
             line2Font: getVal(initLine2Font, i),
+            line2Color: getVal(initLine2Color, i),
             line2Spacing: getVal(initLine2Spacing, i),
             animation: getVal(initAnim, i),
             animSpeed: getVal(initAnimSpeed, i),
