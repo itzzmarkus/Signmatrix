@@ -12,7 +12,7 @@ export const PRESETS = [
         name: "Titan Unstacked",
         color: "#FF9000", width: "200", height: "24", speed: "2500", offColor: "#404040", ledShape: "square", ledSize: "3", ledGap: "1",
         route: "11", routeFont: "24q", routeAlign: "LEFT", routeSuffix: "", routeSuffixFont: "16d",
-        frames: [{ id: Date.now(), line1: "FIFA FAN FESTIVAL", line1Font: "12d", line1Spacing: "0", line2: "", line2Font: "9", line2Spacing: "0", animation: "NONE", animSpeed: "0.25", line1Align: "CENTRE", line2Align: "CENTRE", verticalSpacing: "FLUSH" }],
+        frames: [{ id: Date.now(), line1: "FIFA FAN FESTIVAL", line1Font: "16d", line1Spacing: "0", line2: "", line2Font: "9", line2Spacing: "0", animation: "NONE", animSpeed: "0.25", line1Align: "CENTRE", line2Align: "CENTRE", verticalSpacing: "FLUSH" }],
         prFrames: []
     },
     {

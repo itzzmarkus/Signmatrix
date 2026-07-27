@@ -10,6 +10,7 @@ function UpdateModal({ version, isOpen, onClose }) {
                     <p>• You can now individually adjust font sizes within a text input! Just toggle Mixed Fonts!</p>
                     <p>• Added Balios/Axion fonts, with Axion Unstacked and Stacked presets.</p>
                     <p>• UI is getting a bit cluttered so I may change it in a later update.</p>
+                    <p>• new: changed Titan Unstacked destination preset to 16d.</p>
                 </div>
                 <button
                     onClick={onClose}
