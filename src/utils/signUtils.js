@@ -90,6 +90,7 @@ export const buildApiUrl = (debouncedState) => {
     query.append("routeSuffixFont", debouncedState.routeSuffixFont);
     query.append("routeSuffixColor", (debouncedState.routeSuffixColor || "").replace("#", ""));
 
+    //return `http://localhost:8080/api/sign?${query.toString()}`;
     return `https://signmatrix-backend.onrender.com/api/sign?${query.toString()}`;
 };
 

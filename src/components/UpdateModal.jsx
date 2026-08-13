@@ -11,6 +11,7 @@ function UpdateModal({ version, isOpen, onClose }) {
                     <p>• You can now undo and redo with CTRL+Z and SHIFT+CTRL+Z</p>
                     <p>• Made some UI consistency changes</p>
                     <p>• Please report any bugs in the suggestion box!</p>
+                    <p>• <span className="font-bold">NEW 1.61: </span> You can now use negative line spacing for your terrible signs!</p>
                 </div>
                 <button
                     onClick={onClose}
