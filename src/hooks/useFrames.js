@@ -66,7 +66,7 @@ function useFrames(setPreviewMode) {
         const initLine2Font = getInitialState("prLine2Font", "9").split("|");
         const initLine2Spacing = getInitialState("prLine2Spacing", "0").split("|");
         const initAnim = getInitialState("prAnimation", "NONE").split("|");
-        const initAnimSpeed = getInitialState("prAnimSpeed", "0.25").split("|");
+        const initAnimSpeed = getInitialState("prAnimSpeed", "0.18").split("|");
         const initL1Align = getInitialState("prLine1Align", "CENTRE").split("|");
         const initL2Align = getInitialState("prLine2Align", "CENTRE").split("|");
         const initVSpacing = getInitialState("prVerticalSpacing", "FLUSH").split("|");
