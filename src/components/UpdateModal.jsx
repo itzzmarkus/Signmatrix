@@ -7,10 +7,8 @@ function UpdateModal({ version, isOpen, onClose }) {
                 <h2 className="text-2xl font-bold text-white mb-2">New Signmatrix update</h2>
                 <p className="text-sm text-neutral-400 mb-4">Version {version}</p>
                 <div className="text-neutral-300 space-y-3 mb-6">
-                    <p>- Added 16 new fonts, and updated 2 existing ones, courtesy of @f99shi (new LOWERCASE fonts too!) </p>
-                    <p>- Dest lines now auto scroll when overflow (you can't customize the delay or speed yeet)</p>
-                    <p>• #2, #3, #4, #5, #6 GitHub issues fixed</p>
-                    <p>• Text centring now properly applies for dest lines</p>
+                    <p>- Added 3 new fonts (1 new 14d variation, and 2 new Axion fonts) courtesy of @f99shi</p>
+                    <p>- Added shuttle sign presets, rear sign presets, and adjusted fonts and spacing for existing presets courtesy of @f99shi #7</p>
                     <p>• docs are coming (soon)</p>
                     <p>• Please report any bugs!</p>
                 </div>
