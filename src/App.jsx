@@ -18,7 +18,7 @@ import {PRESETS} from "./data/presets.js";
 import PresetsPanel from "./components/PresetsPanel.jsx";
 import SuggestionBox from "./components/SuggestionBox.jsx";
 
-const CURRENT_UPDATE_VERSION = "v1.7";
+const CURRENT_UPDATE_VERSION = "v1.8";
 
 
 export default function App() {
@@ -149,7 +149,7 @@ export default function App() {
         setLedShape("square");
         setLedSize("3");
         setLedGap("1");
-        setSpeed("2500");
+        setSpeed("1800");
     };
 
     return (<div className="max-w-4xl mx-auto p-6 w-full space-y-4">
