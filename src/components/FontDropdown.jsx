@@ -6,8 +6,8 @@ const FONTS = [
   "l10", "l10d", "l11d", "l12d", "l13d", "l14d", "l14da1", "l15d", "l16d", "l16t",
 
   "5x7", "8x14",
-  "balios7", "balios7m", "balios7w", "balios8", "balios8d", "balios10",
-  "balios12", "balios14", "balios14w", "balios16", "balios16w"
+  "balios7", "balios7w", "balios8", "balios8d", "balios10",
+  "balios12", "balios14", "balios16", "balios16w"
 ];
 
 function FontDropdown({ label, value, onChange }) {
