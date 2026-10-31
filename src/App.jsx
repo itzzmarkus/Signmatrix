@@ -19,6 +19,7 @@ import PresetsPanel from "./components/PresetsPanel.jsx";
 import SuggestionBox from "./components/SuggestionBox.jsx";
 
 const CURRENT_UPDATE_VERSION = "v1.9";
+const BETA_ANNOUNCEMENT_ID = "v2.0-beta";
 
 
 export default function App() {
@@ -127,13 +128,13 @@ export default function App() {
 
     useEffect(() => {
         const seenVersion = localStorage.getItem("signmatrix_update_seen");
-        if (seenVersion !== CURRENT_UPDATE_VERSION) {
+        if (seenVersion !== BETA_ANNOUNCEMENT_ID) {
             setShowUpdateLog(true);
         }
     }, []);
 
     const handleCloseUpdateLog = () => {
-        localStorage.setItem("signmatrix_update_seen", CURRENT_UPDATE_VERSION);
+        localStorage.setItem("signmatrix_update_seen", BETA_ANNOUNCEMENT_ID);
         setShowUpdateLog(false);
     };
 
