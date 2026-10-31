@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function SuggestionBox() {
+function SuggestionBox({ version }) {
     const [suggestion, setSuggestion] = useState('');
     const [status, setStatus] = useState('idle');
 
@@ -8,13 +8,19 @@ function SuggestionBox() {
         e.preventDefault();
         if (!suggestion.trim()) return;
 
+        if (typeof navigator !== 'undefined' && !navigator.onLine) {
+            setStatus('offline');
+            setTimeout(() => setStatus('idle'), 3000);
+            return;
+        }
+
         setStatus('loading');
 
         try {
             const response = await fetch('/api/suggest', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ suggestion })
+                body: JSON.stringify({ suggestion, version })
             });
 
             if (!response.ok) throw new Error('Failed to submit');
@@ -45,6 +51,7 @@ function SuggestionBox() {
 
                 <div className="flex justify-end items-center gap-4">
                     {status === 'success' && <span className="text-green-400 text-sm font-semibold">sent! thanks!</span>}
+                    {status === 'offline' && <span className="text-amber-400 text-sm font-semibold">you're offline! try again when connected</span>}
                     {status === 'error' && <span className="text-red-400 text-sm font-semibold">uh oh, something broke.</span>}
 
                     <button

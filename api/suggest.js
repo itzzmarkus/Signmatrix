@@ -3,7 +3,7 @@ async function handler(req, res) {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    const { suggestion } = req.body;
+    const { suggestion, version } = req.body;
 
     if (!suggestion || suggestion.trim() === '') {
         return res.status(400).json({ error: 'Suggestion cannot be empty' });
@@ -16,11 +16,12 @@ async function handler(req, res) {
     }
 
     try {
+        const header = version ? `**new suggestion (${version})**` : '**new suggestion**';
         const response = await fetch(webhookUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                content: `**new suggestion**\n> ${suggestion}`
+                content: `${header}\n> ${suggestion}`
             })
         });
 

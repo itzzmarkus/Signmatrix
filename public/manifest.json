@@ -1,0 +1,51 @@
+{
+  "id": "/",
+  "short_name": "Signmatrix",
+  "name": "Signmatrix",
+  "description": "Create cool looking and realistic transit LED destination signs with custom fonts, animations, and colours.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#ea580c",
+  "background_color": "#18181b",
+  "categories": [
+    "utilities",
+    "design",
+    "entertainment"
+  ],
+  "icons": [
+    {
+      "src": "/pwa-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-maskable-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Sign",
+      "short_name": "New",
+      "description": "Start designing a new LED sign",
+      "url": "/",
+      "icons": [
+        {
+          "src": "/pwa-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

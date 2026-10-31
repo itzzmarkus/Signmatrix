@@ -2,15 +2,74 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Signmatrix</title>
+
+    <meta name="description" content="Create cool looking and realistic transit LED destination signs with custom fonts, animations, and colours." />
+    <meta name="keywords" content="bus destination sign generator, LED matrix simulator, luminator sign maker, transit rollsign, bus LED font, animated bus sign, dot matrix generator, mobitec sign builder, hanover display" />
+    <meta name="author" content="itzzmarkus" />
+    <meta name="theme-color" content="#ea580c" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://signmatrix.vercel.app/" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Signmatrix" />
+    <meta name="msapplication-TileColor" content="#ea580c" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://signmatrix.vercel.app/" />
+    <meta property="og:title" content="Signmatrix" />
+    <meta property="og:description" content="Create cool looking and realistic transit LED destination signs with custom fonts, animations, and colours." />
+    <meta property="og:image" content="https://signmatrix.vercel.app/og-image.png" />
+    <meta property="og:site_name" content="Signmatrix" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://signmatrix.vercel.app/" />
+    <meta name="twitter:title" content="Signmatrix" />
+    <meta name="twitter:description" content="Create cool looking and realistic transit LED destination signs with custom fonts, animations, and colours." />
+    <meta name="twitter:image" content="https://signmatrix.vercel.app/og-image.png" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Signmatrix",
+      "url": "https://signmatrix.vercel.app/",
+      "description": "Interactive web tool to create cool looking and realistic transit LED destination signs with custom fonts, animations, and colours.",
+      "applicationCategory": "DesignApplication",
+      "operatingSystem": "All",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Person",
+        "name": "itzzmarkus",
+        "url": "https://github.com/itzzmarkus"
+      }
+    }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <title>signmatrix</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" rel="stylesheet">
   </head>
   <body class="font-[Inter]">
-    <div id="root"></div>
+    <div id="root">
+      <noscript>
+        <div style="font-family: sans-serif; padding: 2rem; color: #fff; background: #18181b; min-height: 100vh;">
+          <h1>Signmatrix</h1>
+          <p>Signmatrix is a web application for creating cool looking and realistic transit LED destination signs with custom fonts, animations, and colours.</p>
+          <p>Please enable JavaScript to use Signmatrix.</p>
+        </div>
+      </noscript>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

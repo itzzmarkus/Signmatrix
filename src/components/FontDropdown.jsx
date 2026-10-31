@@ -32,16 +32,42 @@ const FONT_GROUPS = [
     {
         name: "Axion",
         fonts: ["balios7", "balios7w", "balios8", "balios8d", "balios10", "balios12", "balios14", "balios16", "balios16w"]
+    },
+    {
+        name: "Sunrise",
+        fonts: ["sunrise5x7"]
+    },
+    {
+        name: "Hanover",
+        fonts: [
+            "0505c1e1", "0505n1e1", "0605c1e1", "0605n1e1", "0705c1e1", "0705n1e1", "0705nc1e1", "0708b2e1",
+            "0806c1e1", "0806n1e1", "0806nc1e1", "0808b2e1", "0907c1e1", "0908n1e1", "0908b2e1",
+            "1005c1e1", "1005n1e1", "1007b2e1", "1105c1e1", "1107n1e1", "1107n2e1", "1107b1e1", "1110b2e1",
+            "han11n", "han11b", "movia11",
+            "1205c1e1", "1207n1e1", "1210b2e1", "1310c2e1", "1311b3e1",
+            "1410c2e1", "1410cyork", "1410n2e1", "1411b3e1", "logo",
+            "1508c2e1", "1510n2e1", "1513b3e1",
+            "1608c2e1", "1610n2e1", "1613b3e1", "movia16c", "logo16",
+            "1708c2e1", "1710n2e1", "1713b3e1", "17arialn",
+            "movia18",
+            "1910n3e1", "1912b3e1", "19arialb",
+            "movia22",
+            "2420c3e1", "2422n3e1", "2423b3e1", "han24c", "han24n", "han24b", "han24rc",
+            "32test"
+        ]
     }
 ];
 
 const getFontSize = (font) => {
+    if (font === "logo") return 14;
+    if (font === "5x7" || font === "sunrise5x7") return 7;
     const match = font?.match(/\d+/);
     return match ? Number(match[0]) : null;
 };
 
 const getFontLabel = (font) => {
     if (font === "5x7") return "7";
+    if (font === "sunrise5x7") return "5x7";
     if (font === "8x14") return "14";
     const smartFont = font.match(/^smart(\d+)x(\d+)$/);
     if (smartFont) {
@@ -74,8 +100,31 @@ const getFontLabel = (font) => {
         const variantSuffix = ["", "f", "c"][variantIndex] || "";
         return `${height}${strokeSuffix}${variantSuffix}`;
     }
-    if (font === "smartgraphics") return "Graphics";
+    if (font === "smartgraphics") return "Icons";
     if (font === "init8") return "8";
+    if (font === "logo") return "14 Logo";
+    if (font === "logo16") return "16 Logo";
+    if (font === "32test") return "32 Test";
+    if (font === "1410cyork") return "14C (York)";
+    if (font === "17arialn") return "17 Arial N";
+    if (font === "19arialb") return "19 Arial B";
+    if (font.startsWith("movia")) {
+        return font.replace("movia", "") + " Movia";
+    }
+    if (font.startsWith("han")) {
+        return font.replace("han", "");
+    }
+    const hanoverMatch = font.match(/^(\d{2})(\d{2})([a-z]+)(\d)e1$/i);
+    if (hanoverMatch) {
+        const [, h, , t] = hanoverMatch;
+        const hNum = parseInt(h, 10);
+        const typeUpper = t.toUpperCase();
+        if (font.toLowerCase() === "1107n1e1") return "11N (s1)";
+        if (font.toLowerCase() === "1107n2e1") return "11N (s2)";
+        if (font.toLowerCase() === "1107b1e1") return "11B (7w)";
+        if (font.toLowerCase() === "1110b2e1") return "11B (10w)";
+        return `${hNum}${typeUpper}`;
+    }
     return font.replace(/^balios|^l/, "");
 };
 
@@ -109,7 +158,7 @@ function FontDropdown({ label, value, onChange }) {
                         const group = FONT_GROUPS.find(item => item.name === e.target.value);
                         onChange(getClosestFont(group.fonts, value));
                     }}
-                    className="w-full h-10 px-2 rounded bg-neutral-700 border border-neutral-600 text-white focus:outline-none focus:ring-1 focus:ring-orange-500"
+                    className="w-full h-10 px-2 rounded bg-neutral-800 border border-neutral-600 hover:border-neutral-500 text-white text-sm transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-orange-500"
                 >
                     {FONT_GROUPS.map(group => (
                         <option key={group.name} value={group.name}>{group.name}</option>
@@ -119,7 +168,7 @@ function FontDropdown({ label, value, onChange }) {
                     aria-label="Font size"
                     value={selectedFont}
                     onChange={(e) => onChange(e.target.value)}
-                    className="w-full h-10 px-2 rounded bg-neutral-700 border border-neutral-600 text-white focus:outline-none focus:ring-1 focus:ring-orange-500"
+                    className="w-full h-10 px-2 rounded bg-neutral-800 border border-neutral-600 hover:border-neutral-500 text-white text-sm transition-colors cursor-pointer focus:outline-none focus:ring-1 focus:ring-orange-500"
                 >
                     {selectedGroup.fonts.map(font => (
                         <option key={font} value={font}>{getFontLabel(font)}</option>
