@@ -12,7 +12,7 @@ function UpdateModal({ isOpen, onClose }) {
                     <p>⚡ <b>Instant rendering:</b> runs 100% in your browser (also works fully offline as a PWA)</p>
                     <p>🔤 <b>137 fonts:</b> 62 brand new fonts added</p>
                     <p>🟡 <b>New presets:</b> bunch of new presets added</p>
-                    <p>✨ <b>Visual effects:</b> LED glow, round bulbs, sign disease & camera shutter</p>
+                    <p>✨ <b>Visual effects:</b> LED glow, round bulbs, sign disease</p>
                     <p>🎨 <b>Icon studio & exports:</b> draw custom icons, plus export to MP4 & SVG</p>
                     <p className="text-neutral-400 text-xs pt-1">As always, please report any bugs using the suggestion box on the beta site!</p>
                 </div>
