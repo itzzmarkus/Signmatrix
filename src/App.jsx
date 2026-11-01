@@ -27,7 +27,7 @@ import Icon from "./components/Icon.jsx";
 import {parseGraphicsParam} from "./utils/graphicCodec.js";
 import {cloneIcons} from "./utils/iconOverlays.js";
 
-const CURRENT_UPDATE_VERSION = "v2.0 beta";
+const CURRENT_UPDATE_VERSION = "v2.01";
 
 
 export default function App() {
